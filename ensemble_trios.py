@@ -28,7 +28,7 @@ def load_imdb_dataframe(max_words=20000, fraction=0.25, seed=42):
 # ==============================================================
 # Train one model
 # ==============================================================
-def train_model(model_name, df, outdir, seed=42, batch_size=8, epochs=3, max_length=256):
+def train_model(model_name, df, outdir, seed=42, batch_size=16, epochs=3, max_length=256):
     print(f"\n🚀 Training {model_name}...")
 
     # Split data
@@ -144,7 +144,6 @@ def main():
     df = load_imdb_dataframe(fraction=0.25, seed=42)
     df = df.astype({"text": str, "label": int})
 
-    # --- Train models ---
     max_models = [
         "bert-base-uncased",
         "roberta-base",
@@ -159,11 +158,11 @@ def main():
     results = {}
 
     # Train Max Accuracy Trio
-    print("\n🔵 Training Max Accuracy Trio models...")
+    print("\n Training Max Accuracy Trio models...")
     results["max"] = [train_model(m, df, outdir) for m in max_models]
 
     # Train Green Trio
-    print("\n🟢 Training Green Trio models...")
+    print("\n Training Green Trio models...")
     results["green"] = [train_model(m, df, outdir) for m in green_models]
 
     # --- Ensembles ---
@@ -189,7 +188,7 @@ def main():
     plt.savefig(os.path.join(outdir, "ensemble_trio_plot.png"), dpi=150)
     plt.close()
 
-    print("\n📊 Results saved to:", os.path.join(outdir, "ensemble_trio_results.csv"))
+    print("\n Results saved to:", os.path.join(outdir, "ensemble_trio_results.csv"))
     print(df_ens)
 
 if __name__ == "__main__":
